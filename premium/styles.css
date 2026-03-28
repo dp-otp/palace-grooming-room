@@ -1575,15 +1575,15 @@ p {
 /* Close button */
 .prince-widget-close {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 20px;
-    height: 20px;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.06);
-    border: none;
-    color: rgba(255,255,255,0.3);
-    font-size: 11px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1646,10 +1646,11 @@ p {
 
 @media (max-width: 480px) {
     .prince-widget {
-        bottom: 20px;
-        left: 12px;
+        bottom: 16px;
+        left: 10px;
+        gap: 8px;
     }
     .prince-widget-bubble {
-        width: calc(100vw - 48px);
+        width: calc(100vw - 90px);
     }
 }
