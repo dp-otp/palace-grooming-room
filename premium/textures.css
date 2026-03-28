@@ -1,0 +1,431 @@
+/* ============================================================
+   PALACE GROOMING ROOM — TEXTURE SYSTEM
+   Image-based textures (user-provided assets) + CSS utilities
+   ============================================================ */
+
+
+/* ============================================================
+   1. IMAGE-BASED TEXTURES
+   Drop assets into /assets/ and they'll work automatically.
+   Each texture uses ::before for the image layer.
+   ============================================================ */
+
+/* --- Marble --- */
+.texture-marble {
+    position: relative;
+}
+.texture-marble::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: url('assets/marble.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.12;
+    mix-blend-mode: luminosity;
+}
+
+/* --- Velvet --- (user-provided velvet texture for thick surfaces) */
+.texture-velvet {
+    position: relative;
+}
+.texture-velvet::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: url('assets/velvet.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.15;
+    mix-blend-mode: soft-light;
+}
+
+/* --- Onyx --- */
+.texture-onyx {
+    position: relative;
+}
+.texture-onyx::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: url('assets/onyx.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.10;
+    mix-blend-mode: screen;
+}
+
+/* --- Linen --- */
+.texture-linen {
+    position: relative;
+}
+.texture-linen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: url('assets/linen.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.08;
+    mix-blend-mode: multiply;
+}
+
+
+/* --- Oak (dark royal oak wood grain) --- */
+.texture-oak {
+    position: relative;
+}
+.texture-oak::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: url('assets/oak.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.10;
+    mix-blend-mode: multiply;
+}
+
+
+/* ============================================================
+   2. GLASSMORPHISM
+   ============================================================ */
+
+.glass {
+    background: rgba(250,246,240,0.07);
+    backdrop-filter: blur(28px) saturate(1.6) brightness(1.05);
+    -webkit-backdrop-filter: blur(28px) saturate(1.6) brightness(1.05);
+    border: 1px solid rgba(201,168,76,0.18);
+    box-shadow:
+        inset 0 1px 0 rgba(250,246,240,0.15),
+        inset 0 -1px 0 rgba(201,168,76,0.08),
+        0 8px 32px rgba(0,0,0,0.25);
+}
+
+.glass-warm {
+    background: rgba(222,203,183,0.10);
+    backdrop-filter: blur(24px) saturate(1.5) brightness(1.04);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5) brightness(1.04);
+    border: 1px solid rgba(201,168,76,0.22);
+    box-shadow:
+        inset 0 1px 0 rgba(232,213,163,0.20),
+        inset 0 -1px 0 rgba(154,123,53,0.10),
+        0 8px 32px rgba(0,0,0,0.20);
+}
+
+.glass-dark {
+    background: rgba(10,10,15,0.72);
+    backdrop-filter: blur(32px) saturate(1.6) brightness(0.85);
+    -webkit-backdrop-filter: blur(32px) saturate(1.6) brightness(0.85);
+    border: 1px solid rgba(250,246,240,0.08);
+    box-shadow:
+        inset 0 1px 0 rgba(250,246,240,0.06),
+        inset 0 -1px 0 rgba(0,0,0,0.40),
+        0 8px 40px rgba(0,0,0,0.50);
+}
+
+.frosted {
+    background: rgba(10,10,15,0.55);
+    backdrop-filter: blur(20px) brightness(0.88) saturate(1.3);
+    -webkit-backdrop-filter: blur(20px) brightness(0.88) saturate(1.3);
+    border: 1px solid rgba(250,246,240,0.09);
+    box-shadow: inset 0 1px 0 rgba(250,246,240,0.07), 0 8px 32px rgba(0,0,0,0.40);
+}
+
+
+/* ============================================================
+   3. GOLD FOIL BORDER — Animated shimmer
+   ============================================================ */
+
+.gold-foil-border {
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+}
+
+.gold-foil-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(
+        135deg,
+        #9A7B35 0%,
+        #C9A84C 20%,
+        #E8D5A3 40%,
+        #FAF6F0 50%,
+        #E8D5A3 60%,
+        #C9A84C 80%,
+        #9A7B35 100%
+    );
+    background-size: 300% 300%;
+    border-radius: inherit;
+    z-index: -1;
+    animation: foil-shimmer 6s ease infinite;
+}
+
+@keyframes foil-shimmer {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+/* ============================================================
+   4. ORNAMENT — Gold divider
+   ============================================================ */
+
+.ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 8px 0;
+}
+
+.ornament::before,
+.ornament::after {
+    content: '';
+    height: 1px;
+    flex: 1;
+    max-width: 120px;
+    background: linear-gradient(90deg, transparent, #C9A84C 40%, #E8D5A3 60%, #C9A84C 80%, transparent);
+}
+
+.ornament-icon {
+    color: #C9A84C;
+    font-size: 10px;
+    letter-spacing: 6px;
+}
+
+/* Crimson accent divider — thin line variant */
+.ornament-crimson::before,
+.ornament-crimson::after {
+    background: linear-gradient(90deg, transparent, var(--crimson-line, #6B2030) 40%, var(--crimson-line, #6B2030) 60%, transparent);
+}
+
+
+/* ============================================================
+   5. NOISE OVERLAY — Universal grain
+   ============================================================ */
+
+.noise-overlay {
+    position: relative;
+}
+
+.noise-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' seed='8' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+    background-size: 192px 192px;
+    opacity: 0.55;
+    mix-blend-mode: overlay;
+}
+
+
+/* ============================================================
+   6. GEOMETRIC GRID — Gold lattice
+   ============================================================ */
+
+.geo-grid {
+    position: relative;
+}
+
+.geo-grid::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(201,168,76,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.07) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 72%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 72%);
+}
+
+
+/* ============================================================
+   7. SECTION TRANSITIONS — Flowing seamless blends
+   ============================================================ */
+
+/* Fade into dark next section */
+.section-fade-to-dark {
+    position: relative;
+}
+.section-fade-to-dark::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 160px;
+    pointer-events: none;
+    z-index: 2;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(10,10,15,0.40) 40%,
+        rgba(10,10,15,0.75) 70%,
+        #0A0A0F 100%
+    );
+}
+
+/* Fade into light next section */
+.section-fade-to-light {
+    position: relative;
+}
+.section-fade-to-light::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 160px;
+    pointer-events: none;
+    z-index: 2;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(242,235,226,0.45) 40%,
+        rgba(242,235,226,0.80) 70%,
+        #F2EBE2 100%
+    );
+}
+
+/* Blend INTO next dark section — overlapping gradient */
+.section-blend-dark {
+    position: relative;
+    padding-bottom: 120px;
+    margin-bottom: -80px;
+    z-index: 1;
+}
+.section-blend-dark::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    pointer-events: none;
+    z-index: 2;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(10,10,15,0.55) 35%,
+        rgba(10,10,15,0.88) 65%,
+        #0A0A0F 100%
+    );
+    mask-image:
+        linear-gradient(to bottom, transparent, black 80%),
+        linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    mask-composite: intersect;
+    -webkit-mask-image:
+        linear-gradient(to bottom, transparent, black 80%),
+        linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    -webkit-mask-composite: source-in;
+}
+
+/* Blend INTO next light section */
+.section-blend-light {
+    position: relative;
+    padding-bottom: 120px;
+    margin-bottom: -80px;
+    z-index: 1;
+}
+.section-blend-light::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 200px;
+    pointer-events: none;
+    z-index: 2;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(242,235,226,0.55) 35%,
+        rgba(242,235,226,0.90) 65%,
+        #F2EBE2 100%
+    );
+    mask-image:
+        linear-gradient(to bottom, transparent, black 80%),
+        linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    mask-composite: intersect;
+    -webkit-mask-image:
+        linear-gradient(to bottom, transparent, black 80%),
+        linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+    -webkit-mask-composite: source-in;
+}
+
+/* Gold shimmer seam at boundary */
+.section-gold-seam {
+    position: relative;
+}
+.section-gold-seam::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    pointer-events: none;
+    z-index: 3;
+    background: linear-gradient(
+        to right,
+        transparent,
+        #9A7B35 20%,
+        #C9A84C 40%,
+        #E8D5A3 50%,
+        #C9A84C 60%,
+        #9A7B35 80%,
+        transparent
+    );
+    box-shadow:
+        0 0 6px 1px rgba(201,168,76,0.35),
+        0 0 18px 2px rgba(201,168,76,0.15);
+    animation: seam-pulse 5s ease-in-out infinite alternate;
+}
+
+@keyframes seam-pulse {
+    0%   { opacity: 0.55; box-shadow: 0 0 6px 1px rgba(201,168,76,0.25), 0 0 18px 2px rgba(201,168,76,0.08); }
+    100% { opacity: 0.90; box-shadow: 0 0 10px 2px rgba(201,168,76,0.50), 0 0 28px 4px rgba(201,168,76,0.20); }
+}
+
+/* Crimson seam — thin accent line at section boundary */
+.section-crimson-seam {
+    position: relative;
+}
+.section-crimson-seam::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 15%;
+    right: 15%;
+    height: 1px;
+    pointer-events: none;
+    z-index: 3;
+    background: linear-gradient(
+        to right,
+        transparent,
+        var(--crimson-line, #6B2030) 30%,
+        var(--crimson-line, #6B2030) 70%,
+        transparent
+    );
+    opacity: 0.6;
+}

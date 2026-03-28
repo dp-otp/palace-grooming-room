@@ -1,0 +1,613 @@
+/* ============================================
+   PALACE GROOMING ROOM — ANIMATION SYSTEM
+   GPU-first. transform + opacity only.
+   No clip-path transitions. No filter transitions.
+   No layout property animations.
+   ============================================ */
+
+/* ============================================
+   ANIMATION TOKENS
+   ============================================ */
+:root {
+    /* Easings */
+    --spring:           cubic-bezier(0.16, 1, 0.3, 1);
+    --spring-bounce:    cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-out-expo:    cubic-bezier(0.19, 1, 0.22, 1);
+    --ease-out-quart:   cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-in-out-sine: cubic-bezier(0.37, 0, 0.63, 1);
+
+    /* Durations */
+    --dur-fast:   0.35s;
+    --dur-base:   0.65s;
+    --dur-slow:   0.95s;
+    --dur-ultra:  1.3s;
+
+    /* Stagger unit — 0.07s increments */
+    --stagger: 0.07s;
+
+    /* Gold */
+    --gold:       #C9A84C;
+    --gold-light: #E8D5A3;
+    --gold-dim:   rgba(201,168,76,0.15);
+}
+
+
+/* ============================================
+   SCROLL-TRIGGERED REVEAL SYSTEM
+   Driven by IntersectionObserver + [data-animate]
+   ALL animations use only transform + opacity.
+   GPU compositing forced with translate3d / scale3d.
+   ============================================ */
+
+/* Base hidden state */
+[data-animate] {
+    opacity: 0;
+    will-change: transform, opacity;
+    contain: layout style;
+}
+
+/* Revealed state — opacity restored by each variant */
+[data-animate].revealed {
+    opacity: 1;
+}
+
+/* --- fade-up --- */
+[data-animate="fade-up"] {
+    transform: translate3d(0, 30px, 0);
+    transition:
+        opacity  var(--dur-base) var(--spring),
+        transform var(--dur-base) var(--spring);
+}
+[data-animate="fade-up"].revealed {
+    transform: translate3d(0, 0, 0);
+}
+
+/* --- fade-down --- */
+[data-animate="fade-down"] {
+    transform: translate3d(0, -30px, 0);
+    transition:
+        opacity  var(--dur-base) var(--spring),
+        transform var(--dur-base) var(--spring);
+}
+[data-animate="fade-down"].revealed {
+    transform: translate3d(0, 0, 0);
+}
+
+/* --- slide-left (enters from the left) --- */
+[data-animate="slide-left"] {
+    transform: translate3d(-50px, 0, 0);
+    transition:
+        opacity  var(--dur-base) var(--spring),
+        transform var(--dur-base) var(--spring);
+}
+[data-animate="slide-left"].revealed {
+    transform: translate3d(0, 0, 0);
+}
+
+/* --- slide-right (enters from the right) --- */
+[data-animate="slide-right"] {
+    transform: translate3d(50px, 0, 0);
+    transition:
+        opacity  var(--dur-base) var(--spring),
+        transform var(--dur-base) var(--spring);
+}
+[data-animate="slide-right"].revealed {
+    transform: translate3d(0, 0, 0);
+}
+
+/* --- scale-in --- */
+[data-animate="scale-in"] {
+    transform: scale3d(0.92, 0.92, 1);
+    transition:
+        opacity  var(--dur-base) var(--spring),
+        transform var(--dur-base) var(--spring-bounce);
+}
+[data-animate="scale-in"].revealed {
+    transform: scale3d(1, 1, 1);
+}
+
+/* --- blur-in — REPLACED with fade-up behaviour
+   (filter transitions destroy GPU performance) --- */
+[data-animate="blur-in"] {
+    transform: translate3d(0, 30px, 0);
+    transition:
+        opacity  var(--dur-base) var(--spring),
+        transform var(--dur-base) var(--spring);
+}
+[data-animate="blur-in"].revealed {
+    transform: translate3d(0, 0, 0);
+}
+
+/* --- rotate-in --- */
+[data-animate="rotate-in"] {
+    transform: translate3d(0, 20px, 0) rotate(2deg);
+    transition:
+        opacity  var(--dur-base) var(--spring),
+        transform var(--dur-base) var(--spring);
+}
+[data-animate="rotate-in"].revealed {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+}
+
+
+/* ============================================
+   STAGGER DELAYS
+   data-delay="1" → data-delay="12"
+   0.07s increments
+   ============================================ */
+[data-delay="1"]  { transition-delay: calc(var(--stagger) * 1)  !important; }
+[data-delay="2"]  { transition-delay: calc(var(--stagger) * 2)  !important; }
+[data-delay="3"]  { transition-delay: calc(var(--stagger) * 3)  !important; }
+[data-delay="4"]  { transition-delay: calc(var(--stagger) * 4)  !important; }
+[data-delay="5"]  { transition-delay: calc(var(--stagger) * 5)  !important; }
+[data-delay="6"]  { transition-delay: calc(var(--stagger) * 6)  !important; }
+[data-delay="7"]  { transition-delay: calc(var(--stagger) * 7)  !important; }
+[data-delay="8"]  { transition-delay: calc(var(--stagger) * 8)  !important; }
+[data-delay="9"]  { transition-delay: calc(var(--stagger) * 9)  !important; }
+[data-delay="10"] { transition-delay: calc(var(--stagger) * 10) !important; }
+[data-delay="11"] { transition-delay: calc(var(--stagger) * 11) !important; }
+[data-delay="12"] { transition-delay: calc(var(--stagger) * 12) !important; }
+
+
+/* ============================================
+   HERO TITLE — EDITORIAL WORD REVEAL
+   Each word wraps in .hero-word.
+   CSS custom property --word-index drives delay.
+   No split-letter, no clip-path transitions.
+   Pure transform + opacity.
+   ============================================ */
+
+/* Container that triggers reveal */
+.hero-title-reveal {
+    overflow: hidden;
+}
+
+/* Each word is a span.hero-word with style="--word-index: N" */
+.hero-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+    will-change: transform, opacity;
+    transition:
+        opacity   var(--dur-slow) var(--spring),
+        transform var(--dur-slow) var(--spring);
+    transition-delay: calc(var(--word-index, 0) * 0.11s);
+}
+
+.hero-title-revealed .hero-word {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+/* Gold underline draws in after text — uses scaleX only (GPU safe) */
+.hero-title-underline {
+    display: block;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transform-origin: left center;
+    transform: scaleX(0);
+    will-change: transform;
+    transition: transform 0.7s var(--ease-out-expo);
+    transition-delay: 0.6s;
+}
+
+.hero-title-revealed .hero-title-underline {
+    transform: scaleX(1);
+}
+
+
+/* ============================================
+   CARD INTERACTIONS
+   ============================================ */
+
+/* Lift card on hover — transform only, no box-shadow transition */
+.card-tilt {
+    will-change: transform;
+    transition: transform 0.4s var(--spring);
+}
+.card-tilt:hover {
+    transform: translate3d(0, -6px, 0);
+}
+
+/* Glow — outer ring via outline (GPU-composited trick via opacity layer) */
+.hover-glow {
+    position: relative;
+    will-change: transform;
+    transition: transform 0.4s var(--spring);
+}
+.hover-glow::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    border: 1px solid rgba(201,168,76,0.25);
+    opacity: 0;
+    will-change: opacity;
+    transition: opacity 0.4s var(--spring);
+    pointer-events: none;
+}
+.hover-glow:hover {
+    transform: translate3d(0, -4px, 0);
+}
+.hover-glow:hover::after {
+    opacity: 1;
+}
+
+
+/* ============================================
+   MAGNETIC BUTTON
+   CSS-only spring scale + GPU gold sheen sweep
+   ============================================ */
+.btn-magnetic {
+    position: relative;
+    overflow: hidden;
+    will-change: transform;
+    transition: transform 0.35s var(--spring);
+}
+.btn-magnetic:hover {
+    transform: scale3d(1.02, 1.02, 1);
+}
+.btn-magnetic:active {
+    transform: scale3d(0.98, 0.98, 1);
+    transition-duration: 0.15s;
+}
+
+/* Gold sheen — background-position is compositor-safe on gradient pseudo */
+.btn-magnetic::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+        105deg,
+        transparent 40%,
+        rgba(232,213,163,0.18) 50%,
+        transparent 60%
+    );
+    background-size: 300% 100%;
+    background-position: 200% 0;
+    opacity: 0;
+    will-change: opacity, background-position;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+.btn-magnetic:hover::after {
+    opacity: 1;
+    animation: btn-sheen 0.9s var(--ease-out-expo) forwards;
+}
+@keyframes btn-sheen {
+    from { background-position: 200% 0; }
+    to   { background-position: -100% 0; }
+}
+
+
+/* ============================================
+   SCROLL PROGRESS BAR
+   Uses scaleX (GPU composited) not width
+   JS sets --scroll-pct custom property
+   ============================================ */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transform-origin: left center;
+    transform: scaleX(var(--scroll-pct, 0));
+    will-change: transform;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+
+/* ============================================
+   CUSTOM CURSOR — MINIMAL
+   Dot only. No trailing ring.
+   Scales on interactive element hover.
+   Hidden on touch devices.
+   ============================================ */
+.cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    will-change: transform, opacity;
+    /* Position set via JS: translate3d(x,y,0) — no layout thrash */
+    transition:
+        opacity   0.2s ease,
+        transform 0.12s var(--spring);
+    mix-blend-mode: difference;
+}
+
+/* Interactive hover state — dot expands */
+.cursor-hover .cursor-dot {
+    transform: translate3d(
+        var(--cursor-x, 0px),
+        var(--cursor-y, 0px),
+        0
+    ) scale(6.67); /* 6px × 6.67 ≈ 40px */
+}
+
+/* Hide on touch */
+@media (hover: none) and (pointer: coarse) {
+    .cursor-dot { display: none !important; }
+}
+
+
+/* ============================================
+   PRELOADER — TEXT SLIDE UP
+   Letters slide up from overflow:hidden container
+   ============================================ */
+.preloader {
+    position: fixed;
+    inset: 0;
+    background: #0B0B0F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+    will-change: opacity;
+    transition: opacity 0.55s var(--ease-out-expo), visibility 0.55s;
+}
+.preloader.done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.preloader-text {
+    font-family: 'Bodoni Moda', 'Playfair Display', serif;
+    font-size: clamp(48px, 12vw, 96px);
+    font-weight: 400;
+    color: #FAF6F0;
+    letter-spacing: 0.05em;
+    overflow: hidden;
+}
+
+/* Each character wrapped in a span with animation-delay set inline */
+.preloader-text span {
+    display: inline-block;
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+    will-change: transform, opacity;
+    animation: preloader-char 0.55s var(--spring) forwards;
+}
+
+@keyframes preloader-char {
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+
+/* ============================================
+   SCROLL INDICATOR — BOUNCING CHEVRON
+   ============================================ */
+.scroll-indicator {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    will-change: transform, opacity;
+    animation: scroll-bounce 2.4s var(--ease-in-out-sine) infinite;
+}
+.scroll-indicator svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--gold);
+    stroke-width: 2;
+    fill: none;
+    display: block;
+}
+
+@keyframes scroll-bounce {
+    0%, 100% {
+        transform: translate3d(-50%, 0, 0);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate3d(-50%, 10px, 0);
+        opacity: 1;
+    }
+}
+
+
+/* ============================================
+   FLOATING GOLD PARTICLES
+   Simplified — only transform + opacity
+   ============================================ */
+.gold-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+    animation: particle-float 9s var(--ease-out-expo) infinite;
+}
+
+@keyframes particle-float {
+    0%   { opacity: 0;   transform: translate3d(0,   0px,   0) scale3d(0,   0,   1); }
+    12%  { opacity: 0.5; transform: translate3d(0, -18px,   0) scale3d(1,   1,   1); }
+    88%  { opacity: 0.2; transform: translate3d(0, -110px,  0) scale3d(0.6, 0.6, 1); }
+    100% { opacity: 0;   transform: translate3d(0, -150px,  0) scale3d(0,   0,   1); }
+}
+
+.gold-particle:nth-child(2) { animation-delay: 1.8s;  left: 18%; }
+.gold-particle:nth-child(3) { animation-delay: 3.6s;  left: 38%; }
+.gold-particle:nth-child(4) { animation-delay: 5.4s;  left: 58%; }
+.gold-particle:nth-child(5) { animation-delay: 7.2s;  left: 78%; }
+
+
+/* ============================================
+   TESTIMONIAL ROTATION — SMOOTH CROSSFADE
+   ============================================ */
+.testimonial-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+    will-change: transform, opacity;
+    transition:
+        opacity   0.55s var(--spring),
+        transform 0.55s var(--spring);
+    pointer-events: none;
+}
+.testimonial-slide.active {
+    position: relative;
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    pointer-events: auto;
+}
+
+
+/* ============================================
+   STAR RATING — POP ON FILL
+   ============================================ */
+.star-fill {
+    display: inline-block;
+    color: #2C2C34;
+    will-change: transform, color;
+    transition: color 0.25s ease;
+}
+.star-fill.filled {
+    color: var(--gold);
+    animation: star-pop 0.35s var(--spring-bounce);
+}
+@keyframes star-pop {
+    0%   { transform: scale3d(0.4, 0.4, 1); }
+    100% { transform: scale3d(1,   1,   1); }
+}
+
+
+/* ============================================
+   ODOMETER — ROLLING NUMBERS
+   ============================================ */
+.odometer-digit {
+    display: inline-block;
+    overflow: hidden;
+    height: 1.2em;
+    line-height: 1.2;
+    vertical-align: bottom;
+}
+.odometer-digit-inner {
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+    transition: transform 1.1s var(--spring);
+}
+
+
+/* ============================================
+   MOBILE MENU STAGGER
+   Links slide in from left
+   ============================================ */
+.mobile-menu-link {
+    opacity: 0;
+    transform: translate3d(-30px, 0, 0);
+    will-change: transform, opacity;
+    transition:
+        opacity   0.4s var(--spring),
+        transform 0.4s var(--spring);
+}
+.mobile-menu.active .mobile-menu-link {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+.mobile-menu.active .mobile-menu-link:nth-child(1) { transition-delay: 0.04s; }
+.mobile-menu.active .mobile-menu-link:nth-child(2) { transition-delay: 0.09s; }
+.mobile-menu.active .mobile-menu-link:nth-child(3) { transition-delay: 0.14s; }
+.mobile-menu.active .mobile-menu-link:nth-child(4) { transition-delay: 0.19s; }
+.mobile-menu.active .mobile-menu-link:nth-child(5) { transition-delay: 0.24s; }
+.mobile-menu.active .mobile-menu-link:nth-child(6) { transition-delay: 0.29s; }
+.mobile-menu.active .mobile-menu-link:nth-child(7) { transition-delay: 0.34s; }
+
+
+/* ============================================
+   THEME TOGGLE ANIMATION
+   Rotation on mode switch
+   ============================================ */
+
+
+/* ============================================
+   SECTION ENTRANCE
+   Subtle per-section-type entrance on scroll
+   ============================================ */
+
+/* Services grid items */
+.service-card[data-animate] {
+    transform: translate3d(0, 24px, 0) scale3d(0.97, 0.97, 1);
+    transition:
+        opacity   var(--dur-slow) var(--spring),
+        transform var(--dur-slow) var(--spring);
+}
+.service-card[data-animate].revealed {
+    transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+}
+
+/* Pricing cards — subtle lift */
+.pricing-card[data-animate] {
+    transform: translate3d(0, 32px, 0);
+    transition:
+        opacity   var(--dur-slow) var(--spring),
+        transform var(--dur-slow) var(--spring);
+}
+.pricing-card[data-animate].revealed {
+    transform: translate3d(0, 0, 0);
+}
+
+/* Section headings — slight left offset */
+.section-heading[data-animate] {
+    transform: translate3d(-16px, 0, 0);
+    transition:
+        opacity   var(--dur-base) var(--spring),
+        transform var(--dur-base) var(--spring);
+}
+.section-heading[data-animate].revealed {
+    transform: translate3d(0, 0, 0);
+}
+
+
+/* ============================================
+   REDUCED MOTION
+   Hard-disable all animation/transition.
+   No layout recalculation from this block.
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration:       0.01ms !important;
+        animation-iteration-count: 1     !important;
+        transition-duration:      0.01ms !important;
+        transition-delay:         0ms    !important;
+    }
+
+    /* Reveal instantly */
+    [data-animate] {
+        opacity:   1 !important;
+        transform: none !important;
+    }
+
+    /* Kill preloader instantly */
+    .preloader {
+        display: none !important;
+    }
+
+    /* Kill custom cursor */
+    .cursor-dot {
+        display: none !important;
+    }
+
+    /* Kill particle loop */
+    .gold-particle {
+        display: none !important;
+    }
+}

@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prince | AI Concierge | Palace Grooming Room</title>
+    <meta name="description" content="Chat with Prince, the Palace Grooming Room virtual concierge. Ask about services, pricing, booking, hours, and more.">
+    <meta name="robots" content="index, follow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="textures.css">
+
+    <style>
+        /* ==================== PRINCE CHAT STYLES ==================== */
+
+        .prince-page {
+            min-height: 100vh;
+            padding: 120px 24px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .prince-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+        .prince-bg .hero-bg-layer {
+            position: absolute;
+            inset: 0;
+        }
+        .prince-bg .hero-bg-gradient {
+            position: absolute;
+            inset: 0;
+        }
+        #heroGlow {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        #heroSparkles {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        .prince-bg .hero-bg-geometry {
+            position: absolute;
+            inset: -140px;
+            background-image:
+                linear-gradient(30deg,  rgba(201,168,76,0.03) 12%, transparent 12.5%, transparent 87%, rgba(201,168,76,0.03) 87.5%),
+                linear-gradient(150deg, rgba(201,168,76,0.03) 12%, transparent 12.5%, transparent 87%, rgba(201,168,76,0.03) 87.5%);
+            background-size: 80px 140px;
+            background-position: 0 0, 40px 70px;
+            animation: geo-drift 40s linear infinite;
+        }
+        .prince-bg .hero-bg-gradient {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 30% 40%, rgba(44,44,60,0.4) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 20%, rgba(44,44,60,0.5) 0%, transparent 60%),
+                linear-gradient(180deg, rgba(10,10,15,0.2) 0%, transparent 40%, transparent 60%, rgba(10,10,15,0.4) 100%);
+        }
+        @keyframes geo-drift {
+            0%   { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(80px, 140px, 0); }
+        }
+        .prince-header, .chat-container {
+            position: relative;
+            z-index: 3;
+        }
+
+        .prince-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .prince-header .label {
+            margin-bottom: 12px;
+        }
+
+        .prince-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--champagne, #F5E6C8);
+            margin-bottom: 8px;
+        }
+
+        .prince-header p {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: var(--text-muted, #8A8A9A);
+            font-size: var(--text-lg, 1.125rem);
+        }
+
+        /* Chat Container — Glassmorphism */
+        .chat-container {
+            width: 100%;
+            max-width: 680px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(30, 30, 42, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* Chat Header */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.12);
+            background: rgba(20, 20, 30, 0.6);
+        }
+
+        .chat-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #0A0A0F;
+            border: 1px solid rgba(255, 32, 32, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .chat-header-info h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--champagne, #F5E6C8);
+            margin: 0;
+        }
+
+        .chat-header-info span {
+            font-size: 0.75rem;
+            color: var(--text-muted, #8A8A9A);
+            letter-spacing: 0.05em;
+        }
+
+        .chat-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ADE80;
+            margin-left: auto;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Messages Area */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            min-height: 400px;
+            max-height: 520px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(201, 168, 76, 0.2);
+            border-radius: 4px;
+        }
+
+        /* Message Bubbles */
+        .message {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-size: 0.925rem;
+            line-height: 1.6;
+            animation: messageIn 0.3s ease-out;
+        }
+
+        @keyframes messageIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-prince {
+            align-self: flex-start;
+            background: rgba(40, 40, 55, 0.9);
+            color: var(--champagne, #F5E6C8);
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(201, 168, 76, 0.08);
+        }
+
+        .message-prince a {
+            color: #C9A84C;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .message-prince a:hover {
+            color: #E8D48B;
+        }
+
+        .message-user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #C9A84C 0%, #B8943F 100%);
+            color: #0B0B0F;
+            border-bottom-right-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            align-self: flex-start;
+            display: none;
+            gap: 5px;
+            padding: 14px 20px;
+            background: rgba(40, 40, 55, 0.9);
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(201, 168, 76, 0.08);
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(201, 168, 76, 0.5);
+            animation: typingBounce 1.2s ease-in-out infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-6px); opacity: 1; }
+        }
+
+        /* Input Area */
+        .chat-input-area {
+            display: flex;
+            gap: 12px;
+            padding: 20px 24px;
+            border-top: 1px solid rgba(201, 168, 76, 0.12);
+            background: rgba(20, 20, 30, 0.6);
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(201, 168, 76, 0.15);
+            border-radius: 12px;
+            padding: 12px 18px;
+            color: var(--champagne, #F5E6C8);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.925rem;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .chat-input::placeholder {
+            color: rgba(138, 138, 154, 0.6);
+        }
+
+        .chat-input:focus {
+            border-color: rgba(201, 168, 76, 0.4);
+            box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
+        }
+
+        .chat-send {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #C9A84C 0%, #B8943F 100%);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .chat-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(201, 168, 76, 0.3);
+        }
+
+        .chat-send:active {
+            transform: scale(0.95);
+        }
+
+        .chat-send svg {
+            width: 20px;
+            height: 20px;
+            color: #0B0B0F;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 0 24px 16px;
+            background: rgba(20, 20, 30, 0.3);
+        }
+
+        .quick-action {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(201, 168, 76, 0.2);
+            background: rgba(201, 168, 76, 0.06);
+            color: var(--text-muted, #8A8A9A);
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-action:hover {
+            background: rgba(201, 168, 76, 0.15);
+            color: var(--champagne, #F5E6C8);
+            border-color: rgba(201, 168, 76, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .prince-page {
+                padding: 100px 16px 32px;
+            }
+
+            .chat-container {
+                border-radius: 16px;
+            }
+
+            .chat-messages {
+                min-height: 300px;
+                max-height: 420px;
+                padding: 16px;
+            }
+
+            .message {
+                max-width: 90%;
+                font-size: 0.875rem;
+            }
+
+            .chat-input-area {
+                padding: 16px;
+            }
+
+            .quick-actions {
+                padding: 0 16px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="nav" id="mainNav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo"><div class="nav-logo-mustache"><img src="mustache.png" alt="Palace Grooming Room" class="nav-logo-img"></div></a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="services.html" class="nav-link">Services</a></li>
+                <li><a href="about.html" class="nav-link">About</a></li>
+                <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+                <li><a href="prince.html" class="nav-link active">Prince AI</a></li>
+            </ul>
+            <a href="services.html" class="nav-cta btn-magnetic">Book Now</a>
+            <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="nav-mobile" id="navMobile">
+        <a href="index.html" class="mobile-menu-link">Home</a>
+        <a href="services.html" class="mobile-menu-link">Services</a>
+        <a href="about.html" class="mobile-menu-link">About</a>
+        <a href="gallery.html" class="mobile-menu-link">Gallery</a>
+        <a href="contact.html" class="mobile-menu-link">Contact</a>
+        <a href="prince.html" class="mobile-menu-link">Prince AI</a>
+        <a href="services.html" class="mobile-menu-link" style="color:var(--gold); font-size: 1.2em;">Book Now</a>
+    </div>
+
+    <!-- ==================== PRINCE CHAT ==================== -->
+    <main class="prince-page">
+
+        <!-- Animated Hero Background -->
+        <div class="prince-bg">
+            <div class="hero-bg-layer hero-bg-geometry"></div>
+            <div class="hero-bg-gradient"></div>
+            <canvas id="heroGlow"></canvas>
+            <canvas id="heroSparkles"></canvas>
+        </div>
+
+        <div class="prince-header">
+            <span class="label">Virtual Concierge</span>
+            <h1>Meet Prince AI</h1>
+            <p>Your royal guide to Palace Grooming Room</p>
+        </div>
+
+        <div class="chat-container">
+
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="chat-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2020" stroke-width="1.5" width="24" height="24" style="filter: drop-shadow(0 0 4px rgba(255, 32, 32, 0.6)) drop-shadow(0 0 8px rgba(255, 32, 32, 0.3));"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><path d="M3 20h18"/></svg></div>
+                <div class="chat-header-info">
+                    <h3>Prince</h3>
+                    <span>Palace Grooming Room Concierge</span>
+                </div>
+                <div class="chat-status-dot"></div>
+            </div>
+
+            <!-- Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Initial greeting injected by JS -->
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+
+            <!-- Quick Action Buttons -->
+            <div class="quick-actions" id="quickActions">
+                <button class="quick-action" data-msg="What services do you offer?">Services</button>
+                <button class="quick-action" data-msg="How much does a haircut cost?">Prices</button>
+                <button class="quick-action" data-msg="I'd like to book an appointment">Book</button>
+                <button class="quick-action" data-msg="What are your opening hours?">Hours</button>
+                <button class="quick-action" data-msg="Where are you located?">Location</button>
+                <button class="quick-action" data-msg="Tell me about the VIP Experience">VIP</button>
+            </div>
+
+            <!-- Input -->
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Ask Prince anything..." autocomplete="off">
+                <button class="chat-send" id="chatSend" aria-label="Send message">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer texture-onyx">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <p>7 Crescent Road<br>Wood Green, London<br>N22 7RP</p>
+                <p style="margin-top:12px;"><a href="tel:02088814419">020 8881 4419</a></p>
+                <p><a href="mailto:info@palacegroomingroom.com">info@palacegroomingroom.com</a></p>
+            </div>
+            <div class="footer-col">
+                <h4>Hours</h4>
+                <p>Monday: Closed</p>
+                <p>Tue – Sat: 10:00 – 19:00</p>
+                <p>Sunday: 10:00 – 17:00</p>
+            </div>
+            <div class="footer-col">
+                <h4>Follow Us</h4>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/palacegroomingroom/" target="_blank" rel="noopener" class="social-link" aria-label="Instagram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+                        <span>Instagram</span>
+                    </a>
+                    <a href="https://www.tiktok.com/@palacegroomingroom" target="_blank" rel="noopener" class="social-link" aria-label="TikTok">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                        <span>TikTok</span>
+                    </a>
+                    <a href="https://www.fresha.com/lvp/palace-grooming-room-crescent-road-YKjNVK" target="_blank" rel="noopener" class="social-link" aria-label="Fresha">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+                        <span>Book on Fresha</span>
+                    </a>
+                    <a href="https://maps.google.com/?q=Palace+Grooming+Room+Wood+Green" target="_blank" rel="noopener" class="social-link" aria-label="Google Maps">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <span>Google Maps</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span class="footer-logo"><img src="logo.png" alt="Palace Grooming Room"></span>
+            <span class="footer-tagline">Crafted with precision</span>
+            <span class="footer-copy">&copy; 2026 Palace Grooming Room. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script src="palace-knowledge.js"></script>
+    <script src="app.js"></script>
+    <script src="site-paths.js"></script>
+    <script>
+    /* ============================================
+       PRINCE CHAT — Page Script
+       ============================================ */
+
+    (function() {
+        const messages = document.getElementById('chatMessages');
+        const input = document.getElementById('chatInput');
+        const sendBtn = document.getElementById('chatSend');
+        const typing = document.getElementById('typingIndicator');
+        const quickActions = document.getElementById('quickActions');
+
+        // --- Add a message bubble ---
+        function addMessage(html, sender) {
+            const div = document.createElement('div');
+            div.className = 'message message-' + sender;
+            div.innerHTML = html;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        // --- Show typing indicator, then respond ---
+        function princeReply(userText) {
+            typing.classList.add('active');
+            messages.scrollTop = messages.scrollHeight;
+
+            // Simulate a short thinking delay (400-900ms)
+            const delay = 400 + Math.random() * 500;
+            setTimeout(() => {
+                typing.classList.remove('active');
+                const response = PalaceKnowledge.getResponse(userText);
+                addMessage(response, 'prince');
+            }, delay);
+        }
+
+        // --- Handle send ---
+        function handleSend() {
+            const text = input.value.trim();
+            if (!text) return;
+
+            addMessage(text.replace(/</g, '&lt;').replace(/>/g, '&gt;'), 'user');
+            input.value = '';
+            princeReply(text);
+        }
+
+        // --- Events ---
+        sendBtn.addEventListener('click', handleSend);
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSend();
+            }
+        });
+
+        // Quick action buttons
+        quickActions.addEventListener('click', function(e) {
+            const btn = e.target.closest('.quick-action');
+            if (!btn) return;
+            const msg = btn.getAttribute('data-msg');
+            if (msg) {
+                addMessage(msg.replace(/</g, '&lt;').replace(/>/g, '&gt;'), 'user');
+                princeReply(msg);
+            }
+        });
+
+        // --- Initial greeting ---
+        addMessage("Hi! I'm <strong>Prince</strong>, your virtual assistant at Palace Grooming Room. I can help with services, pricing, booking, hours, location, and more. What can I do for you?", 'prince');
+
+        // --- Navigation ---
+        (function() {
+            const nav = document.getElementById('mainNav');
+            const hamburger = document.getElementById('navHamburger');
+            const mobile = document.getElementById('navMobile');
+
+            window.addEventListener('scroll', () => {
+                nav.classList.toggle('scrolled', window.scrollY > 60);
+            }, { passive: true });
+
+            if (hamburger && mobile) {
+                hamburger.addEventListener('click', () => {
+                    hamburger.classList.toggle('active');
+                    mobile.classList.toggle('active');
+                    document.body.style.overflow = mobile.classList.contains('active') ? 'hidden' : '';
+                });
+                mobile.querySelectorAll('a').forEach(a => {
+                    a.addEventListener('click', () => {
+                        hamburger.classList.remove('active');
+                        mobile.classList.remove('active');
+                        document.body.style.overflow = '';
+                    });
+                });
+            }
+        })();
+
+        // Focus input on load (desktop only)
+        if (!window.matchMedia('(hover: none)').matches) {
+            input.focus();
+        }
+
+    })();
+
+    // =====================================================
+    // WebGL: Triangle edge glow trace + diagonal shade wave
+    // =====================================================
+    (function() {
+        var c = document.getElementById('heroGlow');
+        if (!c) return;
+        var gl = c.getContext('webgl', { alpha: true, premultipliedAlpha: false });
+        if (!gl) return;
+
+        var VS = [
+            'attribute vec2 aP;',
+            'varying vec2 vUV;',
+            'void main(){vUV=aP*0.5+0.5;gl_Position=vec4(aP,0,1);}'
+        ].join('\n');
+
+        var FS = [
+            'precision highp float;',
+            'varying vec2 vUV;',
+            'uniform float uT;',
+            'uniform vec2 uR;',
+            'uniform vec2 uD;',
+            'float hash(float a,float b){return fract(sin(a*127.1+b*311.7)*43758.5453);}',
+            'vec2 gradLine(vec2 pos,float ang,vec2 off){',
+            '  pos-=off;',
+            '  vec2 d=vec2(sin(ang),cos(ang));',
+            '  float per=80.0*abs(sin(ang))+140.0*abs(cos(ang));',
+            '  float proj=dot(pos,d);',
+            '  float t=fract(proj/per);',
+            '  float l1=smoothstep(0.006,0.0,abs(t-0.12));',
+            '  float l2=smoothstep(0.006,0.0,abs(t-0.875));',
+            '  return vec2(max(l1,l2),floor(proj/per));',
+            '}',
+            'void main(){',
+            '  vec2 px=vec2(gl_FragCoord.x,uR.y-gl_FragCoord.y)+uD;',
+            '  float ang1=0.5236;',
+            '  float ang2=2.618;',
+            '  vec2 fam1=gradLine(px,ang1,vec2(0));',
+            '  vec2 fam2=gradLine(px,ang2,vec2(40,70));',
+            '  float edge=max(fam1.x,fam2.x);',
+            '  float stagger=(hash(fam1.y,fam2.y)-0.5)*0.1;',
+            '  float lrPos=1.0-gl_FragCoord.y/uR.y;',
+            '  float phase=fract(uT/10.0);',
+            '  float cellLR=lrPos+stagger;',
+            '  float wd=phase-cellLR;',
+            '  wd=wd-floor(wd+0.5);',
+            '  float peak=exp(-wd*wd*300.0);',
+            '  float trail=max(0.0,wd)*exp(-wd*12.0);',
+            '  float glow=(peak+trail*0.5)*edge;',
+            '  float sd=phase-lrPos;',
+            '  sd=sd-floor(sd+0.5);',
+            '  float shade=exp(-sd*sd*20.0)*0.04;',
+            '  vec3 goldCol=vec3(0.55,0.42,0.12);',
+            '  float ga=glow*0.4;',
+            '  float sa=shade;',
+            '  float a=ga+sa;',
+            '  vec3 col=goldCol*ga;',
+            '  col+=vec3(0.0)*sa;',
+            '  gl_FragColor=vec4(col,a);',
+            '}'
+        ].join('\n');
+
+        function mk(src, type) {
+            var s = gl.createShader(type);
+            gl.shaderSource(s, src);
+            gl.compileShader(s);
+            if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) return null;
+            return s;
+        }
+        var vs = mk(VS, gl.VERTEX_SHADER), fs = mk(FS, gl.FRAGMENT_SHADER);
+        if (!vs || !fs) return;
+        var pg = gl.createProgram();
+        gl.attachShader(pg, vs); gl.attachShader(pg, fs);
+        gl.linkProgram(pg);
+        if (!gl.getProgramParameter(pg, gl.LINK_STATUS)) return;
+        gl.useProgram(pg);
+
+        var buf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+        var aP = gl.getAttribLocation(pg, 'aP');
+        gl.enableVertexAttribArray(aP);
+        gl.vertexAttribPointer(aP, 2, gl.FLOAT, false, 0, 0);
+
+        var uT = gl.getUniformLocation(pg, 'uT');
+        var uR = gl.getUniformLocation(pg, 'uR');
+        var uD = gl.getUniformLocation(pg, 'uD');
+
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+        function resize() {
+            var dpr = Math.min(window.devicePixelRatio || 1, 2);
+            var w = c.parentElement.offsetWidth, h = c.parentElement.offsetHeight;
+            c.width = w * dpr; c.height = h * dpr;
+            c.style.width = w + 'px'; c.style.height = h + 'px';
+            gl.viewport(0, 0, c.width, c.height);
+            gl.uniform2f(uR, c.width, c.height);
+        }
+
+        var t0 = performance.now() / 1000;
+        function loop() {
+            var t = performance.now() / 1000 - t0;
+            var dpr = Math.min(window.devicePixelRatio || 1, 2);
+            var driftP = (t % 40) / 40;
+            gl.uniform1f(uT, t);
+            gl.uniform2f(uD, driftP * 80 * dpr, driftP * 140 * dpr);
+            gl.clearColor(0, 0, 0, 0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+            requestAnimationFrame(loop);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        requestAnimationFrame(loop);
+    })();
+
+    // =====================================================
+    // Sparkles
+    // =====================================================
+    (function() {
+        const canvas = document.getElementById('heroSparkles');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let W, H, dpr;
+
+        const sparkles = [];
+        const MAX = 9;
+        let pendingSpawn = 0;
+        let initialized = false;
+
+        function spawn(lifeOverride) {
+            sparkles.push({
+                x: W * (0.1 + Math.random() * 0.8),
+                y: H * (0.35 + Math.random() * 0.55),
+                vy: -(12 + Math.random() * 18),
+                vx: (Math.random() - 0.5) * 4,
+                life: lifeOverride != null ? lifeOverride : 1.0,
+                decay: 0.12 + Math.random() * 0.08,
+                size: 1.4 + Math.random() * 1.6,
+                fadeIn: lifeOverride != null ? 1 : 0,
+                frags: null
+            });
+        }
+
+        function burst(sp) {
+            const frags = [];
+            const n = 4 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < n; i++) {
+                const ang = (Math.PI * 2 / n) * i + Math.random() * 0.8;
+                const spd = 12 + Math.random() * 25;
+                frags.push({
+                    x: sp.x, y: sp.y,
+                    vx: Math.cos(ang) * spd,
+                    vy: Math.sin(ang) * spd - 8,
+                    sz: sp.size * (0.2 + Math.random() * 0.3),
+                    life: 1.0,
+                    decay: 2.5 + Math.random() * 2.0,
+                    rot: Math.random() * Math.PI * 2,
+                    rotV: (Math.random() - 0.5) * 14
+                });
+            }
+            sp.frags = frags;
+        }
+
+        function resize() {
+            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            W = canvas.parentElement.offsetWidth;
+            H = canvas.parentElement.offsetHeight;
+            canvas.width = W * dpr; canvas.height = H * dpr;
+            canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        let last = 0;
+
+        function loop(ts) {
+            const dt = Math.min(ts - last, 50) / 1000;
+            last = ts;
+            ctx.clearRect(0, 0, W, H);
+
+            if (!initialized) {
+                initialized = true;
+                spawn(0.95); spawn(0.88); spawn(0.80); spawn(0.70); spawn(0.60); spawn(0.50); spawn(0.40); spawn(0.30); spawn(0.20);
+            }
+
+            if (pendingSpawn > 0) {
+                pendingSpawn -= dt;
+                if (pendingSpawn <= 0) {
+                    pendingSpawn = 0;
+                    const aliveCount = sparkles.filter(s => !s.frags).length;
+                    if (aliveCount < MAX) spawn();
+                }
+            }
+
+            for (let i = sparkles.length - 1; i >= 0; i--) {
+                const sp = sparkles[i];
+
+                if (sp.frags) {
+                    let alive = false;
+                    for (let f = 0; f < sp.frags.length; f++) {
+                        const fr = sp.frags[f];
+                        fr.x += fr.vx * dt;
+                        fr.y += fr.vy * dt;
+                        fr.vy += 18 * dt;
+                        fr.rot += fr.rotV * dt;
+                        fr.sz *= Math.max(0, 1 - 2.2 * dt);
+                        fr.life -= fr.decay * dt;
+                        if (fr.life <= 0 || fr.sz < 0.06) continue;
+                        alive = true;
+                        ctx.save();
+                        ctx.translate(fr.x, fr.y);
+                        ctx.rotate(fr.rot);
+                        ctx.globalAlpha = Math.max(0, fr.life) * 0.8;
+                        ctx.fillStyle = '#9A7B35';
+                        ctx.fillRect(-fr.sz, -fr.sz * 0.35, fr.sz * 2, fr.sz * 0.7);
+                        ctx.restore();
+                    }
+                    if (!alive) {
+                        sparkles.splice(i, 1);
+                        pendingSpawn = 0.3 + Math.random() * 0.4;
+                    }
+                } else {
+                    sp.fadeIn = Math.min(1, sp.fadeIn + dt * 1.4);
+                    sp.x += sp.vx * dt;
+                    sp.y += sp.vy * dt;
+                    sp.life -= sp.decay * dt;
+                    if (sp.life <= 0.3) { burst(sp); continue; }
+                    const vis = sp.fadeIn * Math.min(1, sp.life * 1.5);
+                    const sz = sp.size;
+                    ctx.globalAlpha = vis * 0.5;
+                    ctx.fillStyle = '#9A7B35';
+                    ctx.beginPath();
+                    ctx.arc(sp.x, sp.y, sz * 0.3, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+            }
+            requestAnimationFrame(loop);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        requestAnimationFrame(loop);
+    })();
+    </script>
+</body>
+</html>
