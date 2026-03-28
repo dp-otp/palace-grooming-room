@@ -139,7 +139,10 @@
             height: 44px;
             border-radius: 50%;
             background: #0A0A0F;
-            border: 1px solid rgba(255, 32, 32, 0.3);
+            border: 2px solid transparent;
+            background-image: linear-gradient(#0A0A0F, #0A0A0F), linear-gradient(135deg, #C9A84C 0%, #6B2030 30%, #C9A84C 50%, #6B2030 70%, #C9A84C 100%);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -450,7 +453,7 @@
 
             <!-- Chat Header -->
             <div class="chat-header">
-                <div class="chat-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="#ff2020" stroke-width="1.5" width="24" height="24" style="filter: drop-shadow(0 0 4px rgba(255, 32, 32, 0.6)) drop-shadow(0 0 8px rgba(255, 32, 32, 0.3));"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><path d="M3 20h18"/></svg></div>
+                <div class="chat-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.5" width="24" height="24" style="filter: drop-shadow(0 0 4px rgba(201, 168, 76, 0.5)) drop-shadow(0 0 8px rgba(201, 168, 76, 0.2));"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><path d="M3 20h18"/></svg></div>
                 <div class="chat-header-info">
                     <h3>Prince</h3>
                     <span>Palace Grooming Room Concierge</span>

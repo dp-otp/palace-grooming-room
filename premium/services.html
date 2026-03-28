@@ -195,7 +195,7 @@
                 </div>
                 <div class="services-grid">
                     <div class="service-card service-card-interactive card-tilt hover-glow" data-animate="fade-up" data-service-id="eyebrows" data-price="10" data-duration="10">
-                        <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28"><path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16.8l-6.4 4.4 2.4-7.2-6-4.8h7.6L12 2z"/></svg></div>
+                        <div class="service-card-icon"><svg viewBox="0 0 64 32" fill="none" stroke="currentColor" stroke-width="2" width="28" height="14" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22C8 10 16 5 26 5c6 0 11 1.5 15 4.5 4 3 7 7 10 12.5" stroke-width="2.5"/><path d="M6 24C10 13 17 8 26 8c5.5 0 10 1.5 13.5 4 3.5 2.5 6.5 6 9.5 11" fill="currentColor" opacity="0.15"/><line x1="30" y1="6" x2="33" y2="16" stroke-width="2.8" stroke="currentColor" opacity="0.9"/></svg></div>
                         <h3 class="service-card-title">Eyebrows Shaping</h3>
                         <div class="service-card-price">&pound;10</div>
                         <div class="service-card-duration">10 min</div>
@@ -238,7 +238,7 @@
 
     <!-- ==================== CART REVIEW MODAL ==================== -->
     <div class="modal-overlay" id="cartModal">
-        <div class="modal-content" style="max-width:560px;">
+        <div class="modal-content" style="max-width:560px; padding:32px 28px; overflow-y:auto;">
             <button class="modal-close" id="cartModalClose">&times;</button>
 
             <!-- SECTION 1: Summary (default view) -->
@@ -919,6 +919,7 @@
         openReview() {
             const modal = document.getElementById('cartModal');
             modal.classList.add('active');
+            document.getElementById('cartWidget').style.display = 'none';
 
             const totals = this.getTotals();
             const servicesEl = document.getElementById('cartModalServices');
@@ -936,6 +937,7 @@
 
             if (totals.count === 0) {
                 modal.classList.remove('active');
+                document.getElementById('cartWidget').style.display = '';
             }
 
             hidePaymentForm();
@@ -950,9 +952,10 @@
     (function() {
         const modal = document.getElementById('cartModal');
         const closeBtn = document.getElementById('cartModalClose');
-        if (closeBtn) closeBtn.addEventListener('click', () => { modal.classList.remove('active'); hidePaymentForm(); });
+        const showCart = () => { document.getElementById('cartWidget').style.display = ''; };
+        if (closeBtn) closeBtn.addEventListener('click', () => { modal.classList.remove('active'); hidePaymentForm(); showCart(); });
         modal.addEventListener('click', (e) => {
-            if (e.target === modal) { modal.classList.remove('active'); hidePaymentForm(); }
+            if (e.target === modal) { modal.classList.remove('active'); hidePaymentForm(); showCart(); }
         });
     })();
 
