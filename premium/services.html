@@ -941,6 +941,48 @@
             }
 
             hidePaymentForm();
+
+            // Disable add-ons already included in selected services
+            const ids = this.items.map(s => s.id);
+            const included = new Set();
+            ids.forEach(id => {
+                if (id === 'vip-experience') { included.add('eyebrows'); included.add('beard'); included.add('facial'); included.add('facialwax'); }
+                if (id === 'haircut-beard') { included.add('beard'); }
+                if (id === 'facial') { included.add('facial'); }
+                if (id === 'eyebrows') { included.add('eyebrows'); }
+                if (id === 'facial-waxing') { included.add('facialwax'); }
+                if (id === 'beard-trim') { included.add('beard'); }
+            });
+            document.querySelectorAll('.extra-item').forEach(item => {
+                const key = item.dataset.extra;
+                if (included.has(key)) {
+                    item.classList.add('extra-disabled');
+                    item.classList.remove('selected');
+                    item.style.opacity = '0.35';
+                    item.style.pointerEvents = 'none';
+                    const extraName = item.querySelector('.extra-info h5').textContent;
+                    selectedExtras = selectedExtras.filter(e => e.name !== extraName);
+                    // Show "Included" label
+                    const priceEl = item.querySelector('.extra-price');
+                    priceEl.dataset.originalText = priceEl.dataset.originalText || priceEl.textContent;
+                    priceEl.textContent = 'Included';
+                    priceEl.style.color = 'var(--gold)';
+                    priceEl.style.fontWeight = '600';
+                    priceEl.style.fontSize = '11px';
+                } else {
+                    item.classList.remove('extra-disabled');
+                    item.style.opacity = '';
+                    item.style.pointerEvents = '';
+                    const priceEl = item.querySelector('.extra-price');
+                    if (priceEl.dataset.originalText) {
+                        priceEl.textContent = priceEl.dataset.originalText;
+                        priceEl.style.color = '';
+                        priceEl.style.fontWeight = '';
+                        priceEl.style.fontSize = '';
+                    }
+                }
+            });
+
             if (typeof updateCartTotal === 'function') updateCartTotal();
         }
     };
