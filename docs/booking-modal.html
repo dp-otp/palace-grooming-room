@@ -1,0 +1,173 @@
+<!-- ============================================
+     BOOKING MODAL - Add this to services.html
+     ============================================ -->
+
+<div class="booking-modal" id="bookingModal">
+    <div class="booking-modal-content">
+        <!-- Header -->
+        <div class="booking-modal-header">
+            <h2>Book Your Appointment</h2>
+            <button class="booking-modal-close" onclick="bookingSystem.closeModal()" aria-label="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="booking-progress">
+            <div class="progress-step active">
+                <div class="progress-number">1</div>
+                <div class="progress-label">Service</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-number">2</div>
+                <div class="progress-label">Barber</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-number">3</div>
+                <div class="progress-label">Date & Time</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-number">4</div>
+                <div class="progress-label">Details</div>
+            </div>
+        </div>
+
+        <!-- Booking Form -->
+        <div class="booking-modal-body" id="booking-form">
+
+            <!-- Step 1: Select Service -->
+            <div class="booking-step active" id="step-1">
+                <h3 class="step-title">Choose Your Service</h3>
+                <div class="services-grid" id="services-container">
+                    <!-- Services loaded dynamically by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Step 2: Select Barber -->
+            <div class="booking-step" id="step-2">
+                <h3 class="step-title">Choose Your Barber</h3>
+                <div class="barbers-grid" id="barbers-container">
+                    <!-- Barbers loaded dynamically by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Step 3: Select Date & Time -->
+            <div class="booking-step" id="step-3">
+                <h3 class="step-title">Pick Date & Time</h3>
+                <div class="datetime-container">
+                    <div class="date-picker-container">
+                        <label for="booking-date">Select Date</label>
+                        <input type="date" id="booking-date" required>
+                    </div>
+                    <div class="time-slots-container">
+                        <h4>Available Times</h4>
+                        <div class="time-slots-grid" id="time-slots-container">
+                            <!-- Time slots loaded dynamically when date is selected -->
+                            <p class="no-slots">Please select a date first</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Contact Details & Confirmation -->
+            <div class="booking-step" id="step-4">
+                <h3 class="step-title">Your Details</h3>
+
+                <div class="booking-summary">
+                    <h3>Booking Summary</h3>
+                    <div class="summary-row">
+                        <span class="summary-label">Service</span>
+                        <span class="summary-value" id="summary-service">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Barber</span>
+                        <span class="summary-value" id="summary-barber">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Date</span>
+                        <span class="summary-value" id="summary-date">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Time</span>
+                        <span class="summary-value" id="summary-time">-</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Price</span>
+                        <span class="summary-value" id="summary-price">-</span>
+                    </div>
+                </div>
+
+                <form id="booking-details-form">
+                    <div class="booking-form-group">
+                        <label for="booking-name">Full Name *</label>
+                        <input
+                            type="text"
+                            id="booking-name"
+                            placeholder="John Smith"
+                            required
+                        >
+                    </div>
+
+                    <div class="booking-form-group">
+                        <label for="booking-email">Email Address *</label>
+                        <input
+                            type="email"
+                            id="booking-email"
+                            placeholder="john@example.com"
+                            required
+                        >
+                    </div>
+
+                    <div class="booking-form-group">
+                        <label for="booking-phone">Phone Number *</label>
+                        <input
+                            type="tel"
+                            id="booking-phone"
+                            placeholder="+44 7XXX XXX XXX"
+                            required
+                        >
+                    </div>
+                </form>
+
+                <div class="payment-notice">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <p><strong>Payment is made in-store after your appointment.</strong></p>
+                    <p>No payment required now.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Success Screen (Hidden by default) -->
+        <div id="booking-success" style="display: none;">
+            <!-- Populated dynamically by JavaScript -->
+        </div>
+
+        <!-- Footer with Navigation -->
+        <div class="booking-modal-footer">
+            <button type="button" class="btn-secondary" id="prevStepBtn" style="display: none;">
+                ← Previous
+            </button>
+            <button type="button" class="btn-primary" id="nextStepBtn" disabled>
+                Next →
+            </button>
+            <button type="button" class="btn-primary" id="submitBookingBtn" style="display: none;">
+                Confirm Booking
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<!--
+    TO OPEN THE MODAL:
+    Add onclick="document.getElementById('bookingModal').classList.add('active')"
+    to any "Book Now" button
+-->
