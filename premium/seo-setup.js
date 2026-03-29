@@ -27,8 +27,8 @@ const BUSINESS_SEO = {
     },
 
     openingHours: [
-        "Tu-Sa 10:00-19:00",
-        "Su 10:00-17:00"
+        "Tu-Sa 10:00-20:00",
+        "Su 10:00-17:30"
     ],
 
     priceRange: "££",

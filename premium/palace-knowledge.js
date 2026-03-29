@@ -16,12 +16,12 @@ const PalaceKnowledge = {
         freshaUrl: 'https://www.fresha.com/lvp/palace-grooming-room-crescent-road-YKjNVK',
         hours: {
             monday: 'Closed',
-            tuesday: '10:00 \u2013 19:00',
-            wednesday: '10:00 \u2013 19:00',
-            thursday: '10:00 \u2013 19:00',
-            friday: '10:00 \u2013 19:00',
-            saturday: '10:00 \u2013 19:00',
-            sunday: '10:00 \u2013 17:00'
+            tuesday: '10:00 \u2013 20:00',
+            wednesday: '10:00 \u2013 20:00',
+            thursday: '10:00 \u2013 20:00',
+            friday: '10:00 \u2013 20:00',
+            saturday: '10:00 \u2013 20:00',
+            sunday: '10:00 \u2013 17:30'
         }
     },
 
@@ -98,8 +98,8 @@ const PalaceKnowledge = {
                 /\b(hour|open|close|time|when|schedule|monday|tuesday|wednesday|thursday|friday|saturday|sunday|today|tomorrow|weekend)\b/i
             ],
             responses: [
-                "Our opening hours are:<br><br>\u2022 <strong>Monday:</strong> Closed<br>\u2022 <strong>Tuesday \u2013 Saturday:</strong> 10:00 \u2013 19:00<br>\u2022 <strong>Sunday:</strong> 10:00 \u2013 17:00<br><br>We recommend booking in advance to secure your preferred time. <a href='https://www.fresha.com/lvp/palace-grooming-room-crescent-road-YKjNVK' target='_blank'>Book on Fresha</a>.",
-                "We're open <strong>Tuesday to Saturday, 10am \u2013 7pm</strong> and <strong>Sunday, 10am \u2013 5pm</strong>. We're closed on Mondays. Pop by or <a href='https://www.fresha.com/lvp/palace-grooming-room-crescent-road-YKjNVK' target='_blank'>book ahead on Fresha</a> to guarantee your slot."
+                "Our opening hours are:<br><br>\u2022 <strong>Monday:</strong> Closed<br>\u2022 <strong>Tuesday \u2013 Saturday:</strong> 10:00 \u2013 20:00<br>\u2022 <strong>Sunday:</strong> 10:00 \u2013 17:30<br><br>We recommend booking in advance to secure your preferred time. <a href='https://www.fresha.com/lvp/palace-grooming-room-crescent-road-YKjNVK' target='_blank'>Book on Fresha</a>.",
+                "We're open <strong>Tuesday to Saturday, 10am \u2013 8pm</strong> and <strong>Sunday, 10am \u2013 5:30pm</strong>. We're closed on Mondays. Pop by or <a href='https://www.fresha.com/lvp/palace-grooming-room-crescent-road-YKjNVK' target='_blank'>book ahead on Fresha</a> to guarantee your slot."
             ]
         },
 
